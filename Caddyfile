@@ -1,9 +1,15 @@
-# This is your Caddy configuration. This default config
-# opens a port and serves a static site from the www folder.
-# Edit this file according to your needs.
+{
+	admin off
+	auto_https off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
 
-# Remember, Railway terminates TLS before it gets to Caddy.
-:8080
+:{$PORT} {
+	basicauth /* {
+		{$AUTH_USER} {$AUTH_PASS_HASH}
+	}
 
-root /www
-file_server
+	reverse_proxy {$NEXTJS_HOST}:{$NEXTJS_PORT}
+}
